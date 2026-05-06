@@ -1,0 +1,35 @@
+name: Accion de notificacion por correo
+
+on:
+  push:
+    branches:
+      - main
+      - feature_a
+      - feature_b
+
+jobs:
+  enviar-correo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Enviar correo informativo
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # Configuración del servidor con gmail
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          
+          # Contenido del correo
+          subject: "Cambios subidos a rama ${{ github.ref_name }}"
+          body: |
+            Se han detectado nuevos cambios en el repositorio.
+            Rama: ${{ github.ref_name }}
+            Autor: ${{ github.actor }}
+          
+          # Destinatario y remitente
+          to: callecaracol234@gmail.com
+          from: Github Actions Notificacion
